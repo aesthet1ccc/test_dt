@@ -1,78 +1,24 @@
 import React from "react";
 import "./App.css";
-import Table_body from "./components/Table_body";
-import Header from "./components/Header.js";
+import Table_body from "./components/Table_body.jsx";
+import Header from "./components/Header.jsx";
 import axios from "axios";
-
-// React.useEffect(() => {
-//   axios.get("https://fakerapi.it/api/v2/persons").then((res) => {
-//     setItems(res.data);
-//   });
-// }, []);
+import Sort from "./components/Sort.jsx";
+import users from "./assets/users.json";
+import Search from "./components/Search.jsx";
 
 function App() {
-  // const arr = [
-  //   {
-  //     firstName: "misha ivanov",
-  //     email: "kristian.cummings@powlowski.com",
-  //     age: "21",
-  //     website: "http:hettinger.biz",
-  //     address: "Arvel Underpass 7427",
-  //     phoneNumber: "8 922 622- 18-98",
-  //   },
-  //   {
-  //     firstName: "ivan",
-  //     email: "kristian.cummings@powlowski.com",
-  //     age: "21",
-  //     website: "http:hettinger.biz",
-  //     address: "Arvel Underpass 7427",
-  //     phoneNumber: "8 922 622- 18-98",
-  //   },
-  // ];
-  const [users, setUsers] = React.useState([]);
-  // console.log(users);
+  const [searchValue, setSearchValue] = React.useState("");
 
-  // React.useEffect(() => {
-  //   fetch("https://fakerapi.it/api/v2/persons")
-  //     .then((res) => {
-  //       return res.json();
-  //     })
-  //     .then((json) => {
-  //       setUsers(json);
-  //       console.log(setUsers(json));
-  //     });
-  // });
-  React.useEffect(() => {
-    axios("https://fakerapi.it/api/v2/persons").then((res) => {
-      setUsers(res.data);
-    });
-  }, []);
+  console.log(searchValue, setSearchValue);
   return (
     <div>
       <Header />
       <div className="content">
         <h1> Студенты</h1>
         <div className="filter_block">
-          <div className="search_block">
-            <img height={18} width={18} src="/img/search.svg" alt="search" />
-            <input placeholder="Поиск по имени" />
-          </div>
-          {/* <div className="sort_block"> */}
-          <nav className="sort_block">
-            <ul className="topMenu">
-              <li className="dropdownBtn">Имя А-Я</li>
-              <img src="/img/sort.svg" width={20} height={20} />
-            </ul>
-            <ul className="subMenu">
-              <li> Имя А-Я</li>
-              <li>Имя Я-А</li>
-              <li>Сначала моложе</li>
-              <li>Сначала старше</li>
-              <li>Высокий рейтинг</li>
-              <li>Низкий рейтинг</li>
-            </ul>
-          </nav>
-          {/* </div> */}
+          <Search searchValue={searchValue} setSearchValue={setSearchValue} />
+          <Sort />
         </div>
         <table>
           <div className="users">
@@ -84,26 +30,29 @@ function App() {
               <th>Адрес</th>
               <th>Телефон</th>
             </thead>
-            {users.map((obj) => (
-              <Table_body
-                // key={index}
-                firstName={obj.firstName}
-                email={obj.email}
-                age={obj.age}
-                website={obj.website}
-                address={obj.address}
-                phoneNumber={obj.phoneNumber}
-              />
-            ))}
-            {/* <Table_body
-              // key={index}
-              firstName="misha ivanov"
-              email="kristian.cummings@powlowski.com"
-              age={21}
-              website="http:hettinger.biz"
-              address="Arvel Underpass 7427"
-              phoneNumber="8 922 622- 18-98"
-            /> */}
+            {users
+              .filter((obj) => {
+                if (
+                  obj.firstName
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  obj.lastName.toLowerCase().includes(searchValue.toLowerCase())
+                ) {
+                  return true;
+                }
+                return false;
+              })
+              .map((obj) => (
+                <Table_body
+                  firstName={obj.firstName}
+                  lastName={obj.lastName}
+                  email={obj.email}
+                  age={obj.age}
+                  website={obj.website}
+                  address={obj.address}
+                  numberPhone={obj.numberPhone}
+                />
+              ))}
           </div>
         </table>
       </div>
