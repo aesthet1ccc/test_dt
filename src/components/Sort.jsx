@@ -2,17 +2,33 @@ import React from "react";
 
 function Sort() {
   const [openPopup, setOpenPopup] = React.useState(false);
+  const [selected, setSelected] = React.useState(0);
 
-  const onCLickOpen = () => {
+  const itemsPopup = ["Имя А-Я", "Имя Я-А", "Сначала моложе", "Сначала старше"];
+
+  const onClickOpen = () => {
     setOpenPopup(!openPopup);
+  };
+
+  const onCLickActivePopup = (i) => {
+    setSelected(i);
+    setOpenPopup(false);
   };
 
   return (
     <div className="sort">
       <div className="sort__label">
-        <span>Имя А-Я</span>
+        <span
+          onClick={() => {
+            onClickOpen();
+          }}
+        >
+          {itemsPopup[selected]}
+        </span>
         <img
-          onClick={() => setOpenPopup(true)}
+          onClick={() => {
+            onClickOpen();
+          }}
           src="/img/sort.svg"
           width={20}
           height={20}
@@ -21,12 +37,21 @@ function Sort() {
       {openPopup && (
         <div className="sort__popup">
           <ul>
-            <li className="active" onClick={() => onCLickOpen()}>
-              Имя А-Я
-            </li>
-            <li>Имя Я-А</li>
-            <li>Сначала моложе</li>
-            <li>Сначала старше</li>
+            {itemsPopup.map((sortType, i) => {
+              const isSelected = selected === i;
+              return (
+                <li
+                  key={i}
+                  className={isSelected ? "active" : ""}
+                  onClick={() => onCLickActivePopup(i)}
+                >
+                  {sortType}
+                  {isSelected && (
+                    <img src="./img/selected_sort.svg" height={18} width={18} />
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

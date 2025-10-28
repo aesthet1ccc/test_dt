@@ -31,19 +31,18 @@ function App() {
               <th>Телефон</th>
             </thead>
             {users
-              .filter((obj) => {
-                if (
-                  obj.firstName
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase()) ||
-                  obj.lastName.toLowerCase().includes(searchValue.toLowerCase())
-                ) {
-                  return true;
-                }
-                return false;
+              .filter(({ firstName, lastName }) => {
+                const fullName = `${firstName} ${lastName}`;
+                const studName = `${lastName} ${firstName}`;
+
+                return (
+                  fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
+                  studName.toLowerCase().includes(searchValue.toLowerCase())
+                );
               })
-              .map((obj) => (
+              .map((obj, index) => (
                 <Table_body
+                  key={index}
                   firstName={obj.firstName}
                   lastName={obj.lastName}
                   email={obj.email}
